@@ -1,45 +1,67 @@
-const statusEl = document.getElementById('status');
-const saveButton = document.getElementById('saveJobBtn');
+const statusEl = document.getElementById("status");
+const saveButton = document.getElementById("saveJobBtn");
 
 const getHostSource = (hostname) => {
-  if (!hostname) return 'other';
+  if (!hostname) return "OTHER";
   const host = hostname.toLowerCase();
-  if (host.includes('linkedin.com')) return 'linkedin';
-  if (host.includes('naukri.com')) return 'naukri';
-  if (host.includes('hirist.com')) return 'hirist';
-  return 'other';
+  if (host.includes("linkedin.com")) return "LINKEDIN";
+  if (host.includes("naukri.com")) return "NAUKRI";
+  if (host.includes("hirist.com")) return "HIRIST";
+  return "OTHER";
 };
 
 const setStatus = (message, isError = false) => {
   if (!statusEl) return;
   statusEl.textContent = message;
-  statusEl.style.color = isError ? 'red' : 'green';
+  statusEl.style.color = isError ? "red" : "green";
 };
 
 const saveJob = async () => {
-  setStatus('Extracting job data...');
+  setStatus("Extracting job data...");
 
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
     if (!tab || !tab.id || !tab.url) {
-      throw new Error('No active tab or URL found');
+      throw new Error("No active tab or URL found");
     }
 
-    const response = await chrome.tabs.sendMessage(tab.id, { action: 'EXTRACT_JOB_DATA' });
+    const response = await chrome.tabs.sendMessage(tab.id, {
+      action: "EXTRACT_JOB_DATA",
+    });
     if (!response || response.error) {
-      throw new Error(response?.error || 'Job data extraction failed');
+      throw new Error(response?.error || "Job data extraction failed");
     }
 
-    const { title, company, jobUrl, description } = response;
+    const {
+      title,
+      company,
+      location,
+      salaryMin,
+      salaryMax,
+      jobUrl,
+      description,
+    } = response;
     const source = getHostSource(new URL(jobUrl).hostname);
 
-    const payload = { title, company, jobUrl, source, description };
+    const payload = {
+      title,
+      company,
+      jobUrl,
+      source,
+      location,
+      salaryMin,
+      salaryMax,
+      description,
+    };
 
-    setStatus('Sending job to API...');
+    setStatus("Sending job to API...");
 
-    const apiResp = await fetch('http://localhost:8080/jobs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const apiResp = await fetch("http://localhost:8080/api/jobs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
@@ -48,13 +70,13 @@ const saveJob = async () => {
       throw new Error(`API responded with status ${apiResp.status}: ${body}`);
     }
 
-    setStatus('Saved ✓');
+    setStatus("Saved ✓");
   } catch (error) {
-    console.error('Save job failed', error);
+    console.error("Save job failed", error);
     setStatus(`Error: ${error.message || error}`, true);
   }
 };
 
 if (saveButton) {
-  saveButton.addEventListener('click', saveJob);
+  saveButton.addEventListener("click", saveJob);
 }
