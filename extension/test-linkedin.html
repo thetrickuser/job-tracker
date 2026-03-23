@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test LinkedIn Extraction</title>
+  </head>
+  <body>
+    <div id="linkedin-content">
+      <!-- Paste your LinkedIn HTML snippet here -->
+      <div
+        class="relative job-details-jobs-unified-top-card__container--two-pane"
+      >
+        <div>
+          <div class="display-flex align-items-center">
+            <div class="display-flex align-items-center flex-1">
+              <a
+                class="QPSBGRTTCToxrpUoVsOUnfwcbljCvWXALY"
+                aria-label="PwC India logo"
+                href="https://www.linkedin.com/company/pwc-india/life"
+                data-test-app-aware-link=""
+              >
+                <div class="ivm-image-view-model">
+                  <div class="ivm-view-attr__img-wrapper">
+                    <img
+                      width="32"
+                      src="https://media.licdn.com/dms/image/v2/D4D0BAQHftNJPUMdOaw/company-logo_100_100/B4DZaB7vDpG8AQ-/0/1745936642766/pwc_india_logo?e=1775692800&amp;v=beta&amp;t=9CenJ47JyMwtFpDOrVr-Ese-n_m5fdksG4S6zfyf8qo"
+                      loading="lazy"
+                      height="32"
+                      alt="PwC India logo"
+                      id="ember234"
+                      class="ivm-view-attr__img--centered EntityPhoto-square-1 evi-image lazy-image ember-view"
+                    />
+                  </div>
+                </div>
+              </a>
+              <div
+                class="job-details-jobs-unified-top-card__company-name"
+                dir="ltr"
+              >
+                <a
+                  class="QPSBGRTTCToxrpUoVsOUnfwcbljCvWXALY"
+                  target="_self"
+                  tabindex="0"
+                  href="https://www.linkedin.com/company/pwc-india/life"
+                  data-test-app-aware-link=""
+                  >PwC India</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="display-flex justify-space-between flex-wrap mt2">
+            <div class="t-24 job-details-jobs-unified-top-card__job-title">
+              <h1 class="t-24 t-bold inline">Senior Full Stack Developer</h1>
+            </div>
+          </div>
+          <div
+            class="job-details-jobs-unified-top-card__primary-description-container"
+          >
+            <div
+              class="t-black--light mt2 job-details-jobs-unified-top-card__tertiary-description-container"
+            >
+              <span dir="ltr">
+                <span class="tvm__text tvm__text--low-emphasis"
+                  >Bangalore, Karnataka</span
+                >
+                <span class="tvm__text tvm__text--low-emphasis"> · </span>
+                <span class="tvm__text tvm__text--low-emphasis"
+                  >3 days ago</span
+                >
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Description Section -->
+      <div
+        class="jobs-box--fadein jobs-box--full-width jobs-box--with-cta-large jobs-description jobs-description--reformatted"
+      >
+        <article class="jobs-description__container">
+          <div
+            class="jobs-description__content jobs-description-content jobs-description-content__text--stretch"
+            id="job-details"
+            tabindex="-1"
+          >
+            <span>
+              <p><strong>Job Description & Summary</strong></p>
+              <p>
+                At PwC, our people in technology focus on integrating
+                cutting-edge technologies into business strategies. We are
+                looking for a Senior Full Stack Developer to join our dynamic
+                team.
+              </p>
+              <p><strong>Responsibilities:</strong></p>
+              <ul>
+                <li>Develop and maintain full-stack web applications</li>
+                <li>Work with React, Node.js, and cloud technologies</li>
+                <li>Collaborate with cross-functional teams</li>
+              </ul>
+              <p><strong>Requirements:</strong></p>
+              <ul>
+                <li>5+ years of experience in full-stack development</li>
+                <li>Strong knowledge of JavaScript, React, and Node.js</li>
+                <li>Experience with AWS or Azure cloud platforms</li>
+              </ul>
+            </span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <script>
+      // Test the extraction functions
+      const extractors = {
+        linkedin: {
+          title: () => {
+            const titleEl = document.querySelector("h1.t-24.t-bold.inline");
+            return titleEl ? titleEl.textContent.trim() : "";
+          },
+          company: () => {
+            const companyEl = document.querySelector(
+              "div.job-details-jobs-unified-top-card__company-name a",
+            );
+            return companyEl ? companyEl.textContent.trim() : "";
+          },
+          location: () => {
+            const locationEl = document.querySelector(
+              "span.tvm__text.tvm__text--low-emphasis",
+            );
+            if (locationEl) {
+              const text = locationEl.textContent.trim();
+              const parts = text.split("·");
+              return parts[0].trim();
+            }
+            return "";
+          },
+          salaryMin: () => null,
+          salaryMax: () => null,
+          description: () => {
+            const descEl = document.querySelector(
+              "div.jobs-description__content.jobs-description-content span",
+            );
+            return descEl ? descEl.textContent.trim().slice(0, 2000) : "";
+          },
+        },
+      };
+
+      // Test extraction
+      const extractor = extractors.linkedin;
+      const result = {
+        title: extractor.title(),
+        company: extractor.company(),
+        location: extractor.location(),
+        salaryMin: extractor.salaryMin(),
+        salaryMax: extractor.salaryMax(),
+        description: extractor.description(),
+      };
+
+      console.log("Test LinkedIn extraction result:", result);
+      document.body.innerHTML +=
+        "<pre>" + JSON.stringify(result, null, 2) + "</pre>";
+    </script>
+  </body>
+</html>
