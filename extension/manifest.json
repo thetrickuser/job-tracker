@@ -10,11 +10,24 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "*://*.linkedin.com/*",
+        "*://*.naukri.com/*",
+        "*://*.hirist.com/*",
+        "*://*.indeed.com/*",
+        "*://*.glassdoor.com/*",
+        "*://*.monster.com/*"
+      ],
       "js": ["content.js"],
-      "run_at": "document_idle",
-      "type": "module"
+      "run_at": "document_idle"
     }
   ],
-  "host_permissions": ["<all_urls>"]
+  "host_permissions": [
+    "*://*.linkedin.com/*",
+    "*://*.naukri.com/*",
+    "*://*.hirist.com/*",
+    "*://*.indeed.com/*",
+    "*://*.glassdoor.com/*",
+    "*://*.monster.com/*"
+  ]
 }
