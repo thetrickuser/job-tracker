@@ -1,47 +1,53 @@
-import { Job, JobStatus, JOB_STATUSES } from "../types/job";
+import { Application, JobStatus, JOB_STATUSES } from "../types/job";
 
 interface JobCardProps {
-  job: Job;
+  application: Application;
   onDelete: (id: string) => void;
   onStatusChange?: (id: string, status: JobStatus) => void;
 }
 
-export function JobCard({ job, onDelete, onStatusChange }: JobCardProps) {
+export function JobCard({
+  application,
+  onDelete,
+  onStatusChange,
+}: JobCardProps) {
   const handleOpenJob = () => {
-    window.open(job.jobUrl, "_blank");
+    window.open(application.job.jobUrl, "_blank");
   };
 
   const handleStatusChange = (newStatus: JobStatus) => {
     if (onStatusChange) {
-      onStatusChange(job.id, newStatus);
+      onStatusChange(application.id, newStatus);
     }
   };
 
   return (
     <div className="job-card">
       <div className="job-card-header">
-        <h3 className="job-title">{job.title}</h3>
+        <h3 className="job-title">{application.job.title}</h3>
         <button
           className="delete-btn"
-          onClick={() => onDelete(job.id)}
-          title="Delete job"
+          onClick={() => onDelete(application.id)}
+          title="Delete application"
         >
           ×
         </button>
       </div>
 
-      <div className="job-company">{job.company}</div>
+      <div className="job-company">{application.job.company}</div>
 
       <div className="job-meta">
-        <span className="job-source">{job.source}</span>
-        {job.location && <span className="job-location">• {job.location}</span>}
+        <span className="job-source">{application.job.source}</span>
+        {application.job.location && (
+          <span className="job-location">• {application.job.location}</span>
+        )}
       </div>
 
-      {job.description && (
+      {application.job.description && (
         <div className="job-description">
-          {job.description.length > 100
-            ? `${job.description.substring(0, 100)}...`
-            : job.description}
+          {application.job.description.length > 100
+            ? `${application.job.description.substring(0, 100)}...`
+            : application.job.description}
         </div>
       )}
 
@@ -53,7 +59,7 @@ export function JobCard({ job, onDelete, onStatusChange }: JobCardProps) {
         {onStatusChange && (
           <select
             className="status-select"
-            value={job.status || "SAVED"}
+            value={application.status}
             onChange={(e) => handleStatusChange(e.target.value as JobStatus)}
           >
             {JOB_STATUSES.map((status) => (

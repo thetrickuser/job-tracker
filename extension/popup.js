@@ -59,14 +59,20 @@ const saveJob = async () => {
 
     setStatus("Sending job to API...");
 
-    const apiResp = await fetch(
-      "https://job-tracker-backend-a5bm.onrender.com/api/jobs",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+    const token = await new Promise((resolve) => {
+      chrome.storage.local.get(["token"], (result) => {
+        resolve(result.token || null);
+      });
+    });
+
+    const apiResp = await fetch("http://localhost:8080/api/applications", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-    );
+      body: JSON.stringify(payload),
+    });
 
     if (!apiResp.ok) {
       const body = await apiResp.text();

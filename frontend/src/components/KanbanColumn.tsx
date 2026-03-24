@@ -1,9 +1,9 @@
-import { Job, JobStatus } from "../types/job";
+import { Application, JobStatus } from "../types/job";
 import { JobCard } from "./JobCard";
 
 interface KanbanColumnProps {
   title: JobStatus;
-  jobs: Job[];
+  jobs: Application[];
   onDeleteJob: (id: string) => void;
   onStatusChange?: (id: string, status: JobStatus) => void;
 }
@@ -22,10 +22,10 @@ export function KanbanColumn({
       </div>
 
       <div className="column-content">
-        {jobs.map((job) => (
+        {jobs.map((app) => (
           <JobCard
-            key={job.id}
-            job={job}
+            key={app.id}
+            application={app}
             onDelete={onDeleteJob}
             onStatusChange={onStatusChange}
           />

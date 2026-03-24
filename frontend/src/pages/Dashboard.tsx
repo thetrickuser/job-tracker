@@ -1,57 +1,64 @@
 import { useState, useEffect } from "react";
-import { Job, JobStatus, JOB_STATUSES } from "../types/job";
+import { Application, JobStatus, JOB_STATUSES } from "../types/job";
 import { api } from "../services/api";
 import { KanbanColumn } from "../components/KanbanColumn";
 
 export function Dashboard() {
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadJobs();
+    loadApplications();
   }, []);
 
-  const loadJobs = async () => {
+  const loadApplications = async () => {
     try {
       setLoading(true);
       setError(null);
-      const fetchedJobs = await api.getJobs();
-      setJobs(fetchedJobs);
+      const fetched = await api.getApplications();
+      setApplications(fetched);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load jobs");
+      setError(
+        err instanceof Error ? err.message : "Failed to load applications",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteJob = async (id: string) => {
+  const handleDeleteApplication = async (id: string) => {
     try {
-      await api.deleteJob(id);
-      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+      await api.deleteApplication(id);
+      setApplications((prev) =>
+        prev.filter((application) => application.id !== id),
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete job");
+      setError(
+        err instanceof Error ? err.message : "Failed to delete application",
+      );
     }
   };
 
-  const handleStatusChange = (id: string, newStatus: JobStatus) => {
-    // For now, just update the local state
-    // TODO: Implement API call when backend supports status updates
-    setJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job.id === id ? { ...job, status: newStatus } : job,
-      ),
-    );
+  const handleStatusChange = async (id: string, newStatus: JobStatus) => {
+    try {
+      const updated = await api.updateApplicationStatus(id, newStatus);
+      setApplications((prev) =>
+        prev.map((item) => (item.id === id ? updated : item)),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update status");
+    }
   };
 
-  const getJobsByStatus = (status: JobStatus) => {
-    return jobs.filter((job) => (job.status || "SAVED") === status);
+  const getAppsByStatus = (status: JobStatus) => {
+    return applications.filter((app) => app.status === status);
   };
 
   if (loading) {
     return (
       <div className="dashboard">
-        <div className="loading">Loading jobs...</div>
+        <div className="loading">Loading applications...</div>
       </div>
     );
   }
@@ -61,7 +68,7 @@ export function Dashboard() {
       <div className="dashboard">
         <div className="error">
           <p>Error: {error}</p>
-          <button onClick={loadJobs}>Retry</button>
+          <button onClick={loadApplications}>Retry</button>
         </div>
       </div>
     );
@@ -71,7 +78,7 @@ export function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Job Tracker</h1>
-        <button onClick={loadJobs} className="refresh-btn">
+        <button onClick={loadApplications} className="refresh-btn">
           Refresh
         </button>
       </header>
@@ -81,8 +88,8 @@ export function Dashboard() {
           <KanbanColumn
             key={status}
             title={status}
-            jobs={getJobsByStatus(status)}
-            onDeleteJob={handleDeleteJob}
+            jobs={getAppsByStatus(status)}
+            onDeleteJob={handleDeleteApplication}
             onStatusChange={handleStatusChange}
           />
         ))}
