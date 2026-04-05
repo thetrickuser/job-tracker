@@ -37,4 +37,13 @@ public class AuthController {
     AuthResponse response = userService.login(request);
     return ResponseEntity.ok(response);
   }
+
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout() {
+    // JWT is stateless, so logout is handled on the client side by clearing the
+    // token.
+    // This endpoint exists for consistency and can be extended for audit logging or
+    // token blacklisting in the future.
+    return ResponseEntity.ok().build();
+  }
 }

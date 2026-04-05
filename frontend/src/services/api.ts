@@ -121,4 +121,22 @@ export const api = {
       throw new Error("Failed to delete application");
     }
   },
+
+  logout(): void {
+    // Call backend logout endpoint for audit logging/future enhancements
+    fetch(`${API_BASE_URL}/auth/logout`, {
+      method: "POST",
+      headers: {
+        ...getAuthHeaders(),
+      },
+    }).catch(() => {
+      // Silently fail - logout still succeeds on client side
+      console.log("Backend logout failed, but client logout will proceed");
+    });
+
+    // Clear local storage
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+  },
 };

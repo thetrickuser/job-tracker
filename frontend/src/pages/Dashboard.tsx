@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Application, JobStatus, JOB_STATUSES } from "../types/job";
 import { api } from "../services/api";
 import { KanbanColumn } from "../components/KanbanColumn";
@@ -7,6 +8,7 @@ export function Dashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadApplications();
@@ -25,6 +27,11 @@ export function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = () => {
+    api.logout();
+    navigate("/login", { replace: true });
   };
 
   const handleDeleteApplication = async (id: string) => {
@@ -78,9 +85,14 @@ export function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Job Tracker</h1>
-        <button onClick={loadApplications} className="refresh-btn">
-          Refresh
-        </button>
+        <div className="header-actions">
+          <button onClick={loadApplications} className="refresh-btn">
+            Refresh
+          </button>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
+        </div>
       </header>
 
       <div className="kanban-board">
