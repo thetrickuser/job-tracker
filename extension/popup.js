@@ -15,7 +15,8 @@ const statusEl = document.getElementById("status");
 // API Configuration
 // ============================================================================
 
-const API_BASE_URL = "https://job-tracker-backend-a5bm.onrender.com";
+const API_BASE_URL = "https://job-tracker-qnmr.onrender.com";
+// const API_BASE_URL = "http://localhost:8080";
 
 // ============================================================================
 // Status Message Handler

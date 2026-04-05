@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Job Saver",
+  "name": "Career Sprint",
   "version": "1.0",
-  "description": "Save job data from any job page to local API.",
+  "description": "This extension allows users to save job listings from supported job portals into a personal job tracking system.",
   "permissions": ["activeTab", "scripting", "storage"],
   "action": {
     "default_popup": "popup.html",
