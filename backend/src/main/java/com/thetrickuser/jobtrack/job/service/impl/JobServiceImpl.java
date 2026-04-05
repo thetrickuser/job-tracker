@@ -59,6 +59,39 @@ public class JobServiceImpl implements JobService {
 
   @Override
   @Transactional
+  public JobResponse findOrCreateJob(JobRequest jobRequest) {
+    if (jobRequest == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job request must not be null");
+    }
+
+    return jobRepository.findByJobUrl(jobRequest.getJobUrl())
+        .map(jobMapper::toResponse)
+        .orElseGet(() -> {
+          Job entity = jobMapper.toEntity(jobRequest);
+          entity.setCreatedAt(LocalDateTime.now());
+          entity.setUpdatedAt(LocalDateTime.now());
+          Job saved = jobRepository.save(entity);
+          return jobMapper.toResponse(saved);
+        });
+  }
+
+  @Override
+  @Transactional
+  public Job findOrCreateJobEntity(JobRequest jobRequest) {
+    if (jobRequest == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job request must not be null");
+    }
+
+    return jobRepository.findByJobUrl(jobRequest.getJobUrl()).orElseGet(() -> {
+      Job entity = jobMapper.toEntity(jobRequest);
+      entity.setCreatedAt(LocalDateTime.now());
+      entity.setUpdatedAt(LocalDateTime.now());
+      return jobRepository.save(entity);
+    });
+  }
+
+  @Override
+  @Transactional
   public void deleteJobById(UUID jobId) {
     if (jobId == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Job id must not be null");

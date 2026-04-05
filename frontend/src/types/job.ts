@@ -7,7 +7,18 @@ export interface Job {
   location?: string;
   description?: string;
   createdAt: string;
-  status?: JobStatus;
+  updatedAt: string;
+}
+
+export interface Application {
+  id: string;
+  job: Job;
+  status: JobStatus;
+  appliedAt?: string;
+  notes?: string;
+  feedback?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type JobStatus =

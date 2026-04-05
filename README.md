@@ -1,56 +1,43 @@
 # Job Tracker
 
-This repository contains a Spring Boot backend and a (separate) frontend. The Docker Compose setup provides a PostgreSQL database and a containerized backend.
+A comprehensive job application tracking system designed to help job seekers organize, monitor, and manage their job applications across multiple platforms.
 
-Quick start (Docker Compose)
+## 📋 Overview
 
-1. Build and start services:
+**Job Tracker** is a full-stack web application that allows users to:
 
-```bash
-docker compose up --build
-```
+- **Aggregate job postings** from various job boards (LinkedIn, Naukri, HirIst, etc.)
+- **Save interesting jobs** with all relevant details (title, company, location, description, salary)
+- **Organize applications** using a Kanban board with status tracking (Saved → Applied → Interviewing → Offer → Rejected)
+- **Track progress** across multiple job applications in one centralized dashboard
+- **Quick access** to original job postings with a single click
+- **Manage data** with the ability to delete or update job statuses
 
-2. Watch logs (recommended during first run):
+## 🎯 Key Features
 
-```bash
-docker compose logs -f backend
-docker compose logs -f postgres
-```
+- 📍 **Multi-source job aggregation** - Support for LinkedIn, Naukri, HirIst, Indeed, Glassdoor, and more
+- 🎨 **Kanban board interface** - Visual organization of job applications by status
+- 💾 **Job details preservation** - Capture and store titles, companies, locations, descriptions, and salary ranges
+- 🔗 **Direct job links** - Quick access to original job postings
+- 📱 **Responsive design** - Works seamlessly on desktop and mobile devices
+- ⚡ **Real-time updates** - Instant status changes and job management
+- 🔄 **Chrome extension** - Browser extension for easy job saving from any website
 
-What the compose file provides
-- `postgres`: PostgreSQL 15 (data persisted in a Docker volume `db-data`).
-- `backend`: the Spring Boot application built from `backend/` using the provided `backend/Dockerfile`.
+## 🏗️ Architecture
 
-Flyway and database migrations
-- This project uses Flyway for database migrations. Migration files live in `backend/src/main/resources/db/migration` and are applied on application startup.
-- Spring Boot 4 changes: Flyway is auto-configured differently than previous Spring Boot versions. The application explicitly enables Flyway via `spring.flyway.enabled=true` and `spring.flyway.locations=classpath:db/migration` in the backend configuration.
-- Do not change `spring.jpa.hibernate.ddl-auto` to `update` — we keep it as `validate` so Flyway manages schema changes. If migrations need a baseline for an existing DB, set `spring.flyway.baseline-on-migrate=true` (only when appropriate).
+**Tech Stack:**
 
-Environment variables (overriding)
-- The Compose file sets these env vars for the backend service (change if needed):
-	- `SPRING_DATASOURCE_URL` (default: `jdbc:postgresql://postgres:5432/jobtrackdb`)
-	- `SPRING_DATASOURCE_USERNAME` (default: `postgres`)
-	- `SPRING_DATASOURCE_PASSWORD` (default: `postgres`)
-	- `SPRING_FLYWAY_ENABLED` (default: `true`)
-	- `SPRING_FLYWAY_LOCATIONS` (default: `classpath:db/migration`)
+- **Backend**: Spring Boot 4 (Java) REST API
+- **Frontend**: React 18 with TypeScript and Vite
+- **Database**: PostgreSQL 15
+- **Infrastructure**: Docker & Docker Compose
+- **Browser Extension**: Chrome/Chromium extension for job capture
 
-Troubleshooting
-- If Flyway migrations do not run, check the backend logs and verify the migration files are present at `backend/src/main/resources/db/migration` and follow Spring's Flyway logging output.
-- Useful commands:
 
-```bash
-docker compose logs backend --no-color --tail=200
-docker compose ps
-docker compose exec postgres psql -U postgres -d jobtrackdb -c "\dt"
-```
+## 📄 License
 
-Development notes
-- The backend `Dockerfile` builds with Maven and runs the packaged JAR. You can build locally with:
+This project is private and intended for personal use.
 
-```bash
-cd backend
-./mvnw -DskipTests package
-```
+---
 
-If you'd like, I can add a small `docker-compose.override.yml` or `.env` file to keep secrets and overrides out of version control.
-
+**Happy job hunting! 🎉**

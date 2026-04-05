@@ -10,6 +10,10 @@ public interface JobService {
 
   JobResponse createJob(JobRequest jobRequest);
 
+  JobResponse findOrCreateJob(JobRequest jobRequest);
+
+  com.thetrickuser.jobtrack.job.entity.Job findOrCreateJobEntity(JobRequest jobRequest);
+
   List<JobResponse> getJobs();
 
   void deleteJobById(UUID jobId);
