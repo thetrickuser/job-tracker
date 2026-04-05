@@ -17,6 +17,7 @@ export function Login() {
       localStorage.setItem("token", response.token);
       localStorage.setItem("userEmail", response.email);
       localStorage.setItem("userName", response.name);
+      console.log("Login successful, token stored in localStorage");
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
