@@ -16,6 +16,7 @@ export function Register() {
     try {
       const response = await api.register(email, password, name);
       localStorage.setItem("token", response.token);
+      localStorage.setItem("refreshToken", response.refreshToken);
       localStorage.setItem("userEmail", response.email);
       localStorage.setItem("userName", response.name);
       navigate("/");
@@ -25,47 +26,86 @@ export function Register() {
   };
 
   return (
-    <div className="auth-page">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
-        <label>
-          Name
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
+    <div className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900 sm:px-6">
+      <div className="mx-auto w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/40">
+        <div className="mb-8 flex items-center gap-4 border-b border-slate-200 pb-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-cyan-500 to-slate-900 text-lg font-bold text-white">
+            CS
+          </div>
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-cyan-500">
+              CareerSprint
+            </p>
+            <h1 className="text-2xl font-semibold text-slate-950">
+              Create your account
+            </h1>
+          </div>
+        </div>
 
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-slate-700">
+              Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-2 block w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+            />
+          </div>
 
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
+          <div>
+            <label className="block text-sm font-medium text-slate-700">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-2 block w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+            />
+          </div>
 
-        {error && <div className="error-message">{error}</div>}
+          <div>
+            <label className="block text-sm font-medium text-slate-700">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-2 block w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-slate-900 focus:ring-2 focus:ring-slate-200"
+            />
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          {error && (
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              {error}
+            </div>
+          )}
 
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+          <button
+            type="submit"
+            className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+          >
+            Register
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-slate-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-semibold text-slate-900 hover:text-slate-700"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
