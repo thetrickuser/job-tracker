@@ -50,7 +50,7 @@ public class SecurityConfig {
     configuration.addAllowedOriginPattern("http://localhost:3000");
     configuration.addAllowedOriginPattern("http://127.0.0.1:3000");
     configuration.addAllowedOriginPattern("https://careersprint-jade.vercel.app");
-    configuration.addAllowedOriginPattern("chrome-extension://*");
+    configuration.addAllowedOriginPattern("chrome-extension://eeacmmkbclmgbpchcikachanfhlhnejn");
     configuration.addAllowedHeader("Authorization");
     configuration.addAllowedHeader("Content-Type");
     configuration.addAllowedMethod("*");
