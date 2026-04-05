@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
@@ -33,8 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String header = request.getHeader("Authorization");
     if (header != null && header.startsWith("Bearer ")) {
       String token = header.substring(7);
+      log.debug("Processing JWT token for request: {} {}", request.getMethod(), request.getRequestURI());
+
       if (jwtUtil.validateToken(token)) {
         String email = jwtUtil.getEmailFromToken(token);
+        log.debug("Token valid for user: {}", email);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null,
@@ -42,6 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+        log.debug("Authentication set for user: {}", email);
+      } else {
+        log.warn("Invalid JWT token provided for request: {} {}", request.getMethod(), request.getRequestURI());
       }
     }
 
