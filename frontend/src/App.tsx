@@ -1,13 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 
-function App() {
-  const token = localStorage.getItem("token");
-  const refreshToken = localStorage.getItem("refreshToken");
-  const isAuthenticated = Boolean(token || refreshToken);
-
+function AppContent() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <BrowserRouter>
@@ -15,7 +13,9 @@ function App() {
           <Route
             path="/"
             element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
             }
           />
           <Route path="/login" element={<Login />} />
@@ -23,6 +23,14 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

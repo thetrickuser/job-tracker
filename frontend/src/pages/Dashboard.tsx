@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { Application, JobStatus, JOB_STATUSES } from "../types/job";
 import { api } from "../services/api";
 import { KanbanColumn } from "../components/KanbanColumn";
@@ -14,6 +15,7 @@ export function Dashboard() {
     title: string;
   } | null>(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     loadApplications();
@@ -35,7 +37,7 @@ export function Dashboard() {
   };
 
   const handleLogout = () => {
-    api.logout();
+    logout();
     navigate("/login", { replace: true });
   };
 
