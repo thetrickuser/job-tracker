@@ -1,7 +1,5 @@
 package com.thetrickuser.jobtrack.security;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +30,7 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
-        .cors(withDefaults())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/**").permitAll()
@@ -49,8 +47,12 @@ public class SecurityConfig {
   public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
     org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
     configuration.setAllowCredentials(true);
-    configuration.addAllowedOriginPattern("*");
-    configuration.addAllowedHeader("*");
+    configuration.addAllowedOriginPattern("http://localhost:3000");
+    configuration.addAllowedOriginPattern("http://127.0.0.1:3000");
+    configuration.addAllowedOriginPattern("https://careersprint-jade.vercel.app");
+    configuration.addAllowedOriginPattern("chrome-extension://*");
+    configuration.addAllowedHeader("Authorization");
+    configuration.addAllowedHeader("Content-Type");
     configuration.addAllowedMethod("*");
 
     org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
