@@ -16,13 +16,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-@Entity 
-@Table(name = "jobs", uniqueConstraints = { @UniqueConstraint(columnNames = "jobUrl")}) 
-@Data 
-@NoArgsConstructor 
-@AllArgsConstructor 
-@Builder 
+@Entity
+@Table(name = "jobs", uniqueConstraints = { @UniqueConstraint(columnNames = "jobUrl") })
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Job {
 
   @Id
@@ -48,6 +50,7 @@ public class Job {
   private String description;
 
   @Column(columnDefinition = "jsonb")
+  @JdbcTypeCode(SqlTypes.JSON)
   private String metadata; // raw extracted data
 
   private LocalDateTime createdAt;
