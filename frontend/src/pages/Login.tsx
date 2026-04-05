@@ -19,6 +19,7 @@ export function Login() {
       localStorage.setItem("userEmail", response.email);
       localStorage.setItem("userName", response.name);
       navigate("/");
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     }
